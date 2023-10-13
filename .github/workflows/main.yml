@@ -21,11 +21,13 @@ jobs:
         TEST_RESULTS: /tmp/test-results
     steps:
       - uses: actions/checkout@v3
+        name: Checkout
         with:
           submodules: recursive
           set-safe-directory: true
       - uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          cd src && CXX main.cpp -o main.out
+      - name: Compile
+        run: |
+          cd src && aarch64-linux-gnu-g++ --sysroot=/opt/cross/sysroot main.cpp -o main.out
