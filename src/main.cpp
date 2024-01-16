@@ -105,11 +105,11 @@ KVM::VirtualMachine::VirtualMachine() : currentMemorySlot(0) {
 
 	hypervisorIO = mmap(NULL, 0x1000, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
 	kvm_userspace_memory_region hypervisorIORegion;
-	memory.slot = currentMemorySlot++;
-	memory.flags = KVM_MEM_READONLY;  // We want writes here to cause VM exits
-	memory.guest_phys_addr = HYPERVISOR_IO_ADDR;
-	memory.memory_size = 0x1000;
-	memory.userspace_addr = (u64)hypervisorIO;
+	hypervisorIORegion.slot = currentMemorySlot++;
+	hypervisorIORegion.flags = KVM_MEM_READONLY;  // We want writes here to cause VM exits
+	hypervisorIORegion.guest_phys_addr = HYPERVISOR_IO_ADDR;
+	hypervisorIORegion.memory_size = 0x1000;
+	hypervisorIORegion.userspace_addr = (u64)hypervisorIO;
 
 	if (ioctl(fd, KVM_SET_USER_MEMORY_REGION, &hypervisorIORegion) < 0) {
 		printf("Failed to set up hypervisor IO memory region\n");
